@@ -304,6 +304,13 @@ const Navbar = ({ activePage, onNavigate }: { activePage: Page, onNavigate: (p: 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
   const navLinks: { label: string, id: Page }[] = [
     { label: 'Home', id: 'home' },
     { label: 'About', id: 'about' },
@@ -349,8 +356,12 @@ const Navbar = ({ activePage, onNavigate }: { activePage: Page, onNavigate: (p: 
           </button>
         </div>
 
-        {/* Mobile Toggle */}
-        <button className={`lg:hidden p-2 rounded-xl transition-all duration-300 hover:-translate-y-0.5 ${isHomeTop ? 'text-white hover:bg-white/10' : 'text-primary hover:bg-primary/5'}`} onClick={() => setMobileMenuOpen(true)}>
+      {/* Mobile Toggle */}
+        <button
+          className={`lg:hidden p-2 rounded-xl transition-all duration-300 hover:-translate-y-0.5 ${isHomeTop ? 'text-white hover:bg-white/10' : 'text-primary hover:bg-primary/5'}`}
+          onClick={() => setMobileMenuOpen(true)}
+          aria-label="Open menu"
+        >
           <Menu size={28} />
         </button>
       </div>
@@ -358,32 +369,63 @@ const Navbar = ({ activePage, onNavigate }: { activePage: Page, onNavigate: (p: 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 bg-white z-[60] p-8 flex flex-col items-center justify-center gap-12"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-slate-950/45 backdrop-blur-md px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:hidden"
+            onClick={() => setMobileMenuOpen(false)}
           >
-            <button className="absolute top-8 right-8 text-primary p-2 hover:bg-gray-100 rounded-xl transition-colors" onClick={() => setMobileMenuOpen(false)}>
-              <X size={32} />
-            </button>
-            <div className="flex flex-col items-center gap-8">
-              {navLinks.map((link) => (
-                <button
-                  key={link.id}
-                  onClick={() => { onNavigate(link.id); setMobileMenuOpen(false); }}
-                  className={`text-4xl font-display font-bold uppercase transition-all duration-300 hover:-translate-y-0.5 ${activePage === link.id ? 'text-secondary' : 'text-primary hover:text-secondary'}`}
-                >
-                  {link.label}
-                </button>
-              ))}
-            </div>
-            <button 
-              onClick={() => { onNavigate('contact'); setMobileMenuOpen(false); }}
-              className="btn-primary w-full max-w-xs py-5 text-lg"
+            <motion.div
+              initial={{ opacity: 0, y: -24, scale: 0.985 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -24, scale: 0.985 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+              onClick={(e) => e.stopPropagation()}
+              className="mx-auto mt-2 flex max-h-[calc(100dvh-1.5rem)] w-full max-w-md flex-col overflow-hidden rounded-[1.75rem] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.985),rgba(246,249,241,0.965))] shadow-[0_30px_90px_rgba(15,23,42,0.28)]"
             >
-              Contact Us
-            </button>
+              <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.45em] text-gray-400">Menu</p>
+                  <p className="mt-1 text-sm font-semibold text-primary">{companyName}</p>
+                </div>
+                <button
+                  className="rounded-full p-2 text-primary transition-colors hover:bg-primary/5"
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-label="Close menu"
+                >
+                  <X size={28} />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto px-5 py-5">
+                <div className="space-y-2.5">
+                  {navLinks.map((link) => (
+                    <button
+                      key={link.id}
+                      onClick={() => { onNavigate(link.id); setMobileMenuOpen(false); }}
+                      className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3.5 text-left transition-all duration-300 active:scale-[0.99] ${
+                        activePage === link.id
+                          ? 'border-secondary/25 bg-secondary/10 text-primary shadow-[0_10px_28px_rgba(240,185,11,0.12)]'
+                          : 'border-gray-100 bg-white text-primary hover:border-primary/15 hover:bg-primary/[0.03]'
+                      }`}
+                    >
+                      <span className="text-[0.95rem] font-bold uppercase tracking-[0.18em]">{link.label}</span>
+                      <span className={`h-2.5 w-2.5 rounded-full ${activePage === link.id ? 'bg-secondary' : 'bg-gray-300'}`} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t border-gray-100 bg-white px-5 py-4">
+                <button 
+                  onClick={() => { onNavigate('contact'); setMobileMenuOpen(false); }}
+                  className="btn-primary w-full py-4"
+                >
+                  Contact Us
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
