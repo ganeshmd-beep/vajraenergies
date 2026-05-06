@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-primary: #2E7D32;
+  --color-primary-dark: #1B5E20;
+  --color-secondary: #FFC107;
+  --color-surface: #F9FAFB;
+  --color-text-main: #1F2937;
+  --color-text-muted: #6B7280;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans bg-[#f8faf7] text-text-main antialiased selection:bg-secondary/30 selection:text-primary;
+    background-image:
+      radial-gradient(circle at top left, rgba(46, 125, 50, 0.08), transparent 28%),
+      radial-gradient(circle at top right, rgba(255, 193, 7, 0.10), transparent 24%),
+      linear-gradient(180deg, #fbfcfa 0%, #f4f7f1 100%);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-semibold tracking-tight text-gray-900;
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: clamp(2.75rem, 5vw, 4.5rem) !important;
+    line-height: 1.03;
+    letter-spacing: -0.05em;
+  }
+
+  h2 {
+    font-size: clamp(2rem, 3vw, 3.25rem) !important;
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+  }
+
+  h3 {
+    font-size: clamp(1.35rem, 2vw, 1.9rem) !important;
+    line-height: 1.15;
+  }
+
+  h4 {
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem) !important;
+    line-height: 1.2;
+  }
+
+  p, li {
+    line-height: 1.75;
+  }
+
+  p, li, button, input, textarea, a {
+    @apply tracking-normal;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-dark text-white px-10 py-5 rounded-2xl font-bold uppercase text-[11px] tracking-[0.25em] transition-all duration-500 hover:shadow-[0_20px_50px_rgba(46,125,50,0.3)] hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary hover:bg-yellow-500 text-primary px-10 py-5 rounded-2xl font-bold uppercase text-[11px] tracking-[0.25em] transition-all duration-500 hover:shadow-[0_20px_50px_rgba(255,193,7,0.3)] hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3;
+  }
+
+  .section-spacing {
+    @apply py-16 md:py-24;
+  }
+  
+  .container-custom {
+    @apply max-w-7xl mx-auto px-6 sm:px-8;
+  }
+
+  .card-premium {
+    @apply bg-white rounded-[2.5rem] p-10 sm:p-12 border border-white/80 shadow-[0_18px_50px_rgba(15,23,42,0.06)] hover:shadow-[0_30px_70px_rgba(15,23,42,0.10)] transition-all duration-700 hover:-translate-y-2;
+  }
+
+  .section-panel {
+    @apply rounded-[3rem] border border-white/70 bg-white/80 backdrop-blur-xl shadow-[0_24px_80px_rgba(15,23,42,0.06)];
+  }
+  
+  .text-stroke {
+    -webkit-text-stroke: 1px currentColor;
+    color: transparent;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-surface;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/20 rounded-full hover:bg-primary/40 transition-colors;
+}
