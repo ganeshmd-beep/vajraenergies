@@ -52,7 +52,6 @@ type ServiceItem = {
 
 type ProjectItem = {
   title: string;
-  loc: string;
   cap: string;
   type: 'Residential' | 'Commercial' | 'Industrial';
   outcome: string;
@@ -141,12 +140,24 @@ const serviceItems: ServiceItem[] = [
     timeline: 'Handled in parallel with the project timeline.',
     heroNote: 'Helpful when approvals, documentation, and utility steps need careful handling.',
   },
+  {
+    title: 'O&M Services',
+    tagline: 'Keep assets running at peak performance',
+    num: '07',
+    icon: Wrench,
+    image: slideRooftopTwo,
+    description: 'Operations and maintenance support that keeps solar assets clean, monitored, and performing reliably over time.',
+    benefits: ['Scheduled inspections and preventive care', 'Module cleaning and performance checks', 'Fault response and uptime support'],
+    idealFor: 'Asset owners who want better generation, fewer surprises, and long-term reliability from their solar plant.',
+    includes: ['Preventive maintenance', 'Site inspections', 'Cleaning schedules', 'Issue resolution tracking'],
+    timeline: 'Can be started immediately or folded into an existing maintenance contract.',
+    heroNote: 'Best for teams that want ongoing care, stable output, and less downtime.',
+  },
 ];
 
 const projectItems: ProjectItem[] = [
   {
     title: 'The Sunlit Estate',
-    loc: 'Hyderabad',
     cap: '15kW Elite',
     type: 'Residential',
     outcome: 'Net-Zero for 25yrs',
@@ -157,7 +168,6 @@ const projectItems: ProjectItem[] = [
   },
   {
     title: 'Crystal Mall Hub',
-    loc: 'Vijayawada',
     cap: '120kW Hybrid',
     type: 'Commercial',
     outcome: 'OPEX Reduction 45%',
@@ -168,7 +178,6 @@ const projectItems: ProjectItem[] = [
   },
   {
     title: 'Nexa Industrial',
-    loc: 'Pune',
     cap: '1.2MW Prime',
     type: 'Industrial',
     outcome: 'Carbon-Neutral MFG',
@@ -179,7 +188,6 @@ const projectItems: ProjectItem[] = [
   },
   {
     title: 'Metro HealthCare',
-    loc: 'Bengaluru',
     cap: '85kW Backup',
     type: 'Commercial',
     outcome: 'Critical Power Sync',
@@ -190,7 +198,6 @@ const projectItems: ProjectItem[] = [
   },
   {
     title: 'Kisan Cold Storage',
-    loc: 'Nashik',
     cap: '300kW Solar',
     type: 'Industrial',
     outcome: 'ROI achieved in 3.2yrs',
@@ -201,7 +208,6 @@ const projectItems: ProjectItem[] = [
   },
   {
     title: 'Marine Sky Villa',
-    loc: 'Mumbai',
     cap: '20kW Bespoke',
     type: 'Residential',
     outcome: 'Smart Home Integrated',
@@ -488,7 +494,7 @@ const Footer = ({ onNavigate }: { onNavigate: (p: Page) => void }) => {
           <div>
             <h4 className="text-[11px] font-bold mb-8 uppercase tracking-[0.45em] text-white">Services</h4>
             <ul className="space-y-5 text-white/85">
-              {['Residential Solar', 'Commercial Solar', 'Industrial Solar', 'Maintenance', 'Consultation', 'INC Services'].map((item) => (
+              {['Residential Solar', 'Commercial Solar', 'Industrial Solar', 'Maintenance', 'O&M Services', 'Consultation', 'INC Services'].map((item) => (
                 <li key={item} className="text-base font-medium">
                   {item}
                 </li>
@@ -827,9 +833,9 @@ const HomePage = ({ onNavigate }: { onNavigate: (p: Page) => void }) => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {[
-              { img: slideRooftopOne, title: 'Estate 10kW', category: 'Residential', location: 'Hyderabad' },
-              { img: slideRooftopThree, title: 'Retail 100kW', category: 'Commercial', location: 'Bengaluru' },
-              { img: slideGroundFour, title: 'Manufacturing 1MW', category: 'Industrial', location: 'Pune' }
+              { img: slideRooftopOne, title: 'Estate 10kW', category: 'Residential' },
+              { img: slideRooftopThree, title: 'Retail 100kW', category: 'Commercial' },
+              { img: slideGroundFour, title: 'Manufacturing 1MW', category: 'Industrial' }
             ].map((project, i) => (
               <motion.div 
                 key={i}
@@ -841,7 +847,6 @@ const HomePage = ({ onNavigate }: { onNavigate: (p: Page) => void }) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-12 flex flex-col justify-end text-left">
                   <span className="text-secondary text-[10px] font-bold uppercase tracking-[0.4em] mb-4">{project.category}</span>
                   <h3 className="text-3xl font-display font-bold text-white mb-2 tracking-tight">{project.title}</h3>
-                  <p className="text-white/60 text-sm font-medium tracking-widest uppercase">Location: {project.location}</p>
                   
                   <div className="mt-8 pt-8 border-t border-white/10 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-500">
                     <span className="text-[10px] font-bold text-white uppercase tracking-[0.3em]">Examine Project</span>
@@ -1221,7 +1226,7 @@ const ServiceDetailPage = ({ service, onNavigate }: { service: ServiceItem | nul
           <div className="grid grid-cols-1 lg:grid-cols-[0.98fr_1.02fr] gap-12 items-stretch">
             <div className="relative overflow-hidden rounded-[2.5rem] shadow-[0_30px_80px_rgba(15,23,42,0.10)] min-h-[520px]">
               <img src={service.image} alt={service.title} className="absolute inset-0 h-full w-full object-cover object-center" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/55 to-transparent" />
               <button
                 onClick={() => onNavigate('services')}
                 className="absolute top-5 left-5 flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.3em] text-primary backdrop-blur-md transition hover:bg-white"
@@ -1229,14 +1234,14 @@ const ServiceDetailPage = ({ service, onNavigate }: { service: ServiceItem | nul
                 <ArrowRight size={14} className="rotate-180" />
                 Back
               </button>
-              <div className="absolute left-6 bottom-6 right-6 text-white">
+              <div className="absolute left-6 bottom-6 right-6 text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)]">
                 <span className="mb-3 inline-flex rounded-full bg-secondary px-4 py-2 text-[9px] font-bold uppercase tracking-[0.35em] text-primary">
                   {service.tagline}
                 </span>
-                <h1 className="text-4xl md:text-6xl font-display font-bold leading-[0.98] tracking-tight">
+                <h1 className="text-4xl md:text-6xl font-display font-bold leading-[0.98] tracking-tight text-white">
                   {service.title}
                 </h1>
-                <p className="mt-5 max-w-xl text-white/80 text-base md:text-lg leading-relaxed">
+                <p className="mt-5 max-w-xl text-white/90 text-base md:text-lg leading-relaxed">
                   {service.heroNote}
                 </p>
               </div>
@@ -1382,7 +1387,6 @@ const ProjectsPage = ({ onOpenDetail, onNavigate }: { onOpenDetail: (project: Pr
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent p-12 flex flex-col justify-end text-left translate-y-12 group-hover:translate-y-0 transition-transform duration-700">
                                         <div className="flex items-center gap-3 mb-6">
                                             <span className="bg-secondary text-primary px-3 py-1 rounded text-[9px] font-black uppercase tracking-[0.2em]">{p.type}</span>
-                                            <span className="text-white/50 text-[10px] font-bold uppercase tracking-widest">Location: {p.loc}</span>
                                         </div>
                                         <h3 className="text-4xl font-display font-bold text-white mb-6 leading-tight tracking-tight">{p.title}</h3>
                                         
@@ -1477,11 +1481,7 @@ const ProjectDetailPage = ({ project, onNavigate }: { project: ProjectItem | nul
                 {project.summary}
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                <div className="card-premium p-6">
-                  <div className="text-[10px] font-bold uppercase tracking-[0.35em] text-gray-400 mb-3">Location</div>
-                  <p className="text-sm leading-relaxed text-gray-600">{project.loc}</p>
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 mb-8">
                 <div className="card-premium p-6">
                   <div className="text-[10px] font-bold uppercase tracking-[0.35em] text-gray-400 mb-3">Capacity</div>
                   <p className="text-sm leading-relaxed text-gray-600">{project.cap}</p>
@@ -1643,7 +1643,7 @@ const ContactPage = () => {
                                     <div className="space-y-4 text-left">
                                         <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 ml-2">Solution Type</label>
                                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                            {['Residential Solar', 'Commercial Solar', 'Industrial Solar', 'Maintenance'].map((type) => (
+                                            {['Residential Solar', 'Commercial Solar', 'Industrial Solar', 'Maintenance', 'O&M Services'].map((type) => (
                                                 <button key={type} type="button" className="py-4 border-2 border-gray-100 rounded-xl font-bold uppercase text-[9px] tracking-widest hover:border-primary transition-all focus:bg-primary focus:text-white focus:border-primary">
                                                     {type}
                                                 </button>
