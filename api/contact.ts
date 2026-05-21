@@ -43,6 +43,7 @@ export default async function handler(
     res.status(200).json({ ok: true });
   } catch (error) {
     console.error('Failed to send contact email:', error);
-    res.status(500).json({ error: 'We could not send your enquiry right now.' });
+    const message = error instanceof Error ? error.message : 'We could not send your enquiry right now.';
+    res.status(500).json({ error: message });
   }
 }

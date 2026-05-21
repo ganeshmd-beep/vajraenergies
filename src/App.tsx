@@ -1635,7 +1635,9 @@ const ContactPage = () => {
             setProjectBrief('');
         } catch (error) {
             setStatus('error');
-            setStatusMessage(error instanceof Error ? error.message : 'We could not send your enquiry right now.');
+            const fallback =
+              'We could not send your enquiry right now. If you are using onboarding@resend.dev, Resend only allows sending to your own verified email address. For sales@vajraenergies.info, verify your domain in Resend and use a sender from that domain.';
+            setStatusMessage(error instanceof Error ? error.message : fallback);
         }
     };
 

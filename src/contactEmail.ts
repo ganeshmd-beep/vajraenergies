@@ -48,7 +48,7 @@ export async function sendContactEmail(payload: ContactPayload) {
     payload.projectBrief,
   ].join('\n');
 
-  const { error } = await resend.emails.send({
+  const response = await resend.emails.send({
     from: senderEmail,
     to: recipientEmail,
     subject,
@@ -65,7 +65,7 @@ export async function sendContactEmail(payload: ContactPayload) {
     replyTo: payload.email,
   });
 
-  if (error) {
-    throw error;
+  if (response.error) {
+    throw new Error(response.error.message || 'Resend rejected the email request.');
   }
 }
