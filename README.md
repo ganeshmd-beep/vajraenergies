@@ -32,3 +32,5 @@ CONTACT_FROM_EMAIL="Vajra Energies <onboarding@resend.dev>"
 If you have verified your own domain in Resend, replace the sender with an address from that domain.
 
 The contact form posts to `/api/contact` and the local server sends the email through Resend.
+
+On Vercel, this same route is handled by the serverless function in [`/api/contact.ts`](C:/Users/Sakshi/Downloads/vajra-energies/api/contact.ts), so you do not need to run a custom Express server in production.
