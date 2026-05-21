@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Menu, X, Sun, Battery, Factory, Wrench, Lightbulb, 
@@ -35,6 +35,7 @@ const salesEmail = 'sales@vajraenergies.info';
 const phoneNumber = '7095696666';
 const phoneLink = 'tel:7095696666';
 const whatsappLink = 'https://wa.me/917095696666?text=Hi%20VAJRA%20ENERGIES%20LLP%2C%20I%27d%20like%20to%20discuss%20a%20solar%20project.';
+const solutionTypes = ['Residential Solar', 'Commercial Solar', 'Industrial Solar', 'Maintenance', 'O&M Services'];
 
 type ServiceItem = {
   title: string;
@@ -1591,6 +1592,53 @@ const BlogPage = () => {
 };
 
 const ContactPage = () => {
+    const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [solutionType, setSolutionType] = useState(solutionTypes[0]);
+    const [projectBrief, setProjectBrief] = useState('');
+    const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+    const [statusMessage, setStatusMessage] = useState('');
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setStatus('sending');
+        setStatusMessage('');
+
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name.trim(),
+                    phone: phone.trim(),
+                    email: email.trim(),
+                    solutionType,
+                    projectBrief: projectBrief.trim(),
+                }),
+            });
+
+            const payload = await response.json().catch(() => null);
+
+            if (!response.ok) {
+                throw new Error(payload?.error ?? 'We could not send your enquiry right now.');
+            }
+
+            setStatus('success');
+            setStatusMessage('Thanks. Your enquiry has been sent and we will review it shortly.');
+            setName('');
+            setPhone('');
+            setEmail('');
+            setSolutionType(solutionTypes[0]);
+            setProjectBrief('');
+        } catch (error) {
+            setStatus('error');
+            setStatusMessage(error instanceof Error ? error.message : 'We could not send your enquiry right now.');
+        }
+    };
+
     return (
         <div className="pt-0 bg-white min-h-screen">
             <section className="pt-6 md:pt-10 pb-12 md:pb-24 text-primary">
@@ -1628,37 +1676,97 @@ const ContactPage = () => {
                                 {/* Decor */}
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
                                 
-                                <form className="space-y-10 relative z-10" onSubmit={(e) => e.preventDefault()}>
+                                <form className="space-y-10 relative z-10" onSubmit={handleSubmit}>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                         <div className="space-y-4 text-left">
                                             <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 ml-2">Name</label>
-                                            <input type="text" placeholder="Full Name" className="w-full bg-surface border-b-2 border-gray-100 px-8 py-6 rounded-2xl focus:outline-none focus:border-primary transition-all font-bold text-primary placeholder:font-light" />
+                                            <input
+                                                type="text"
+                                                placeholder="Full Name"
+                                                value={name}
+                                                onChange={(event) => setName(event.target.value)}
+                                                required
+                                                className="w-full bg-surface border-b-2 border-gray-100 px-8 py-6 rounded-2xl focus:outline-none focus:border-primary transition-all font-bold text-primary placeholder:font-light"
+                                            />
                                         </div>
                                         <div className="space-y-4 text-left">
                                             <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 ml-2">Connect</label>
-                                            <input type="tel" placeholder="Phone Number" className="w-full bg-surface border-b-2 border-gray-100 px-8 py-6 rounded-2xl focus:outline-none focus:border-primary transition-all font-bold text-primary placeholder:font-light" />
+                                            <input
+                                                type="tel"
+                                                placeholder="Phone Number"
+                                                value={phone}
+                                                onChange={(event) => setPhone(event.target.value)}
+                                                required
+                                                className="w-full bg-surface border-b-2 border-gray-100 px-8 py-6 rounded-2xl focus:outline-none focus:border-primary transition-all font-bold text-primary placeholder:font-light"
+                                            />
                                         </div>
                                     </div>
                                     
                                     <div className="space-y-4 text-left">
                                         <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 ml-2">Solution Type</label>
                                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                            {['Residential Solar', 'Commercial Solar', 'Industrial Solar', 'Maintenance', 'O&M Services'].map((type) => (
-                                                <button key={type} type="button" className="py-4 border-2 border-gray-100 rounded-xl font-bold uppercase text-[9px] tracking-widest hover:border-primary transition-all focus:bg-primary focus:text-white focus:border-primary">
+                                            {solutionTypes.map((type) => (
+                                                <button
+                                                    key={type}
+                                                    type="button"
+                                                    onClick={() => setSolutionType(type)}
+                                                    aria-pressed={solutionType === type}
+                                                    className={`py-4 border-2 rounded-xl font-bold uppercase text-[9px] tracking-widest transition-all ${
+                                                        solutionType === type
+                                                            ? 'border-primary bg-primary text-white'
+                                                            : 'border-gray-100 hover:border-primary focus:border-primary'
+                                                    }`}
+                                                >
                                                     {type}
                                                 </button>
                                             ))}
                                         </div>
                                     </div>
+
+                                    <div className="space-y-4 text-left">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 ml-2">Email</label>
+                                        <input
+                                            type="email"
+                                            placeholder="you@example.com"
+                                            value={email}
+                                            onChange={(event) => setEmail(event.target.value)}
+                                            required
+                                            className="w-full bg-surface border-b-2 border-gray-100 px-8 py-6 rounded-2xl focus:outline-none focus:border-primary transition-all font-bold text-primary placeholder:font-light"
+                                        />
+                                    </div>
                                     
                                     <div className="space-y-4 text-left">
                                         <label className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 ml-2">Project Brief</label>
-                                        <textarea placeholder="Describe your energy requirements..." rows={5} className="w-full bg-surface border-b-2 border-gray-100 px-8 py-6 rounded-2xl focus:outline-none focus:border-primary transition-all font-bold text-primary placeholder:font-light resize-none" />
+                                        <textarea
+                                            placeholder="Describe your energy requirements..."
+                                            rows={5}
+                                            value={projectBrief}
+                                            onChange={(event) => setProjectBrief(event.target.value)}
+                                            required
+                                            className="w-full bg-surface border-b-2 border-gray-100 px-8 py-6 rounded-2xl focus:outline-none focus:border-primary transition-all font-bold text-primary placeholder:font-light resize-none"
+                                        />
                                     </div>
                                     
-                                    <button className="btn-primary w-full py-8 text-sm group flex items-center justify-center gap-4">
-                                        Authorize Consultation <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+                                    <button
+                                        type="submit"
+                                        disabled={status === 'sending'}
+                                        className="btn-primary w-full py-8 text-sm group flex items-center justify-center gap-4 disabled:opacity-70 disabled:cursor-not-allowed"
+                                    >
+                                        {status === 'sending' ? 'Sending enquiry...' : 'Authorize Consultation'}
+                                        <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
                                     </button>
+
+                                    {statusMessage && (
+                                      <p
+                                        className={`rounded-2xl px-6 py-4 text-sm font-medium ${
+                                          status === 'success'
+                                            ? 'bg-emerald-50 text-emerald-700'
+                                            : 'bg-rose-50 text-rose-700'
+                                        }`}
+                                      >
+                                        {statusMessage}
+                                      </p>
+                                    )}
 
                                     <a
                                       href={whatsappLink}
